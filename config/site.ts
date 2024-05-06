@@ -1,69 +1,74 @@
 export type SiteConfig = typeof siteConfig;
 
+export const baseUrl = 'https://app.mande.network/subgraphs/name/TrustDrops';
+export const myStakesQuery =
+  'query GetStakesSent($address: String!) {\n  stakes(where: {staker_: {id: $address}}) {\n    amount\n    credScore\n    candidate {\n      id\n      __typename\n    }\n    __typename\n  }\n}';
+export const receivedStakesQuery =
+  'query GetStakesSent($address: String!) {\n  stakes(where: {candidate_: {id: $address}}) {\n    amount\n    credScore\n    staker {\n      id\n      __typename\n    }\n    __typename\n  }\n}';
 export const siteConfig = {
-	name: "Next.js + NextUI",
-	description: "Make beautiful websites regardless of your design experience.",
-	navItems: [
-		{
-			label: "Home",
-			href: "/",
-		},
+  name: 'Tek Zeki Sensin',
+  description: 'Make beautiful websites regardless of your design experience.',
+  navItems: [
     {
-      label: "Docs",
-      href: "/docs",
+      label: 'Home',
+      href: '/',
     },
     {
-      label: "Pricing",
-      href: "/pricing",
+      label: 'Docs',
+      href: '/docs',
     },
     {
-      label: "Blog",
-      href: "/blog",
+      label: 'Pricing',
+      href: '/pricing',
     },
     {
-      label: "About",
-      href: "/about",
-    }
-	],
-	navMenuItems: [
-		{
-			label: "Profile",
-			href: "/profile",
-		},
-		{
-			label: "Dashboard",
-			href: "/dashboard",
-		},
-		{
-			label: "Projects",
-			href: "/projects",
-		},
-		{
-			label: "Team",
-			href: "/team",
-		},
-		{
-			label: "Calendar",
-			href: "/calendar",
-		},
-		{
-			label: "Settings",
-			href: "/settings",
-		},
-		{
-			label: "Help & Feedback",
-			href: "/help-feedback",
-		},
-		{
-			label: "Logout",
-			href: "/logout",
-		},
-	],
-	links: {
-		github: "https://github.com/nextui-org/nextui",
-		twitter: "https://twitter.com/getnextui",
-		docs: "https://nextui.org",
-		discord: "https://discord.gg/9b6yyZKmH4",
-    sponsor: "https://patreon.com/jrgarciadev"
-	},
+      label: 'Blog',
+      href: '/blog',
+    },
+    {
+      label: 'About',
+      href: '/about',
+    },
+  ],
+  navMenuItems: [
+    {
+      label: 'Profile',
+      href: '/profile',
+    },
+    {
+      label: 'Dashboard',
+      href: '/dashboard',
+    },
+    {
+      label: 'Projects',
+      href: '/projects',
+    },
+    {
+      label: 'Team',
+      href: '/team',
+    },
+    {
+      label: 'Calendar',
+      href: '/calendar',
+    },
+    {
+      label: 'Settings',
+      href: '/settings',
+    },
+    {
+      label: 'Help & Feedback',
+      href: '/help-feedback',
+    },
+    {
+      label: 'Logout',
+      href: '/logout',
+    },
+  ],
+  links: {
+    github: 'https://github.com/nextui-org/nextui',
+    twitter: 'https://twitter.com/getnextui',
+    docs: 'https://nextui.org',
+    discord: 'https://discord.gg/9b6yyZKmH4',
+    sponsor: 'https://patreon.com/jrgarciadev',
+  },
 };
