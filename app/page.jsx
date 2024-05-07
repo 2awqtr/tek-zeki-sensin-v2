@@ -13,9 +13,9 @@ import {
   TableHeader,
   TableRow,
 } from '@nextui-org/table';
-
 import axios from 'axios';
 import { useCallback, useState } from 'react';
+import { isAddress } from 'web3-validator';
 
 const columns = [
   {
@@ -39,9 +39,15 @@ export default function Home() {
   const [wallet, setWallet] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [zekiler, setZekiler] = useState([]);
+  const [isInvalid, setIsInvalid] = useState(false);
 
   const sendQueries = async () => {
     if (wallet === '') {
+      return;
+    }
+
+    if (!isAddress(wallet)) {
+      setIsInvalid(true);
       return;
     }
 
@@ -90,7 +96,6 @@ export default function Home() {
 
         const receivedStakedAmount = receivedStakes.get(staker);
         if (receivedStakedAmount === undefined) {
-          console.log(`${staker} stake etmemiş`);
           temp.push({
             staker: staker,
             youStaked: amount,
@@ -105,12 +110,10 @@ export default function Home() {
             youStaked: amount,
             receivedStake: receivedStakedAmount || 0,
           });
-          console.log(`${staker} ile stake edilen miktar aynı değil`);
         }
       }
 
       setZekiler(temp);
-      console.log('fnsh');
     } catch (error) {
       console.log(error);
     } finally {
@@ -143,19 +146,29 @@ export default function Home() {
 
   return (
     <div className="w-full flex flex-col justify-center items-start gap-10">
-      <div className="flex w-full items-center gap-2">
+      <div className="flex w-full items-center justify-center gap-2">
         <Input
-          color="secondary"
+          isInvalid={isInvalid}
           placeholder="Enter your wallet address"
-          onChange={(e) => setWallet(e.target.value)}
+          errorMessage="Please enter valid address"
+          endContent={
+            <Button
+              className="bg-transparent hover:bg-transparent"
+              isIconOnly
+              onClick={sendQueries}
+            >
+              <SearchIcon />
+            </Button>
+          }
+          onChange={(e) => {
+            const address = e.target.value.trim();
+            if (address === '') {
+              setIsInvalid(false);
+              return;
+            }
+            setWallet(address);
+          }}
         ></Input>
-        <Button
-          className="bg-transparent hover:bg-slate-600"
-          isIconOnly
-          onClick={sendQueries}
-        >
-          <SearchIcon className="text-purple-600" />
-        </Button>
       </div>
 
       <Table aria-label="" isStriped isHeaderSticky>
