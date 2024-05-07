@@ -1,7 +1,6 @@
 import { fontSans } from '@/config/fonts';
 import { siteConfig } from '@/config/site';
 import '@/styles/globals.css';
-import { Link } from '@nextui-org/link';
 import clsx from 'clsx';
 import { Metadata, Viewport } from 'next';
 import { Providers } from './providers';
@@ -42,17 +41,6 @@ export default function RootLayout({
             <main className="container mx-auto max-w-7xl pt-16 px-6 flex-grow">
               {children}
             </main>
-            <footer className="w-full flex items-center justify-center py-3">
-              <Link
-                isExternal
-                className="flex items-center gap-1 text-current"
-                href="https://twitter.com/Ruesandora0"
-                title="Ruesandora"
-              >
-                <span className="text-default-600">Powered by</span>
-                <p className="text-primary">RC</p>
-              </Link>
-            </footer>
           </div>
         </Providers>
       </body>
