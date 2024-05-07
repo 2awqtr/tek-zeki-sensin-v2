@@ -12,7 +12,7 @@ export const metadata: Metadata = {
     template: `%s - ${siteConfig.name}`,
   },
   icons: {
-    icon: '/rues.jpg',
+    icon: '/mande.jpg',
   },
 };
 
