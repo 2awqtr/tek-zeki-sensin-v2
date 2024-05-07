@@ -24,11 +24,11 @@ const columns = [
   },
   {
     key: 'youStaked',
-    label: 'Staked',
+    label: 'Your Stake',
   },
   {
     key: 'receivedStake',
-    label: 'Received Staked',
+    label: 'Received Stake',
   },
 ];
 
@@ -123,11 +123,13 @@ export default function Home() {
     switch (columnKey) {
       case 'receivedStake':
       case 'youStaked':
-        return <div className="text-[#7071E8]">{cellValue} $MAND</div>;
+        return (
+          <div className="text-[#7071E8] font-mono">{cellValue} $MAND</div>
+        );
       case 'staker':
         return (
           <Snippet
-            className="bg-transparent text-[#7071E8]"
+            className="bg-transparent text-sm text-[#7071E8]"
             symbol=""
             size="sm"
           >
@@ -156,27 +158,29 @@ export default function Home() {
         </Button>
       </div>
 
-      <div className="w-full flex items-center justify-center">
-        {isLoading && <Spinner label="Az biraz bekle amk" color="danger" />}
-        {zekiler.length > 0 && (
-          <Table aria-label="">
-            <TableHeader columns={columns}>
-              {(column) => (
-                <TableColumn key={column.key}>{column.label}</TableColumn>
+      <Table aria-label="" isStriped isHeaderSticky>
+        <TableHeader columns={columns}>
+          {(column) => (
+            <TableColumn key={column.key} align="center">
+              {column.label}
+            </TableColumn>
+          )}
+        </TableHeader>
+        <TableBody
+          items={zekiler}
+          emptyContent={'No address found'}
+          isLoading={isLoading}
+          loadingContent={<Spinner label="Loading..." color="secondary" />}
+        >
+          {(item) => (
+            <TableRow key={item.staker}>
+              {(columnKey) => (
+                <TableCell>{renderCell(item, columnKey)}</TableCell>
               )}
-            </TableHeader>
-            <TableBody items={zekiler}>
-              {(item) => (
-                <TableRow key={item.staker}>
-                  {(columnKey) => (
-                    <TableCell>{renderCell(item, columnKey)}</TableCell>
-                  )}
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        )}
-      </div>
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
     </div>
   );
 }
