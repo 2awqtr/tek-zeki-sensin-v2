@@ -1,10 +1,10 @@
 'use client';
-import { SearchIcon } from '@/components/icons';
+import { RefreshIcon, SearchIcon } from '@/components/icons';
 import { baseUrl, myStakesQuery, receivedStakesQuery } from '@/config/site';
 import { Button } from '@nextui-org/button';
 import { Input } from '@nextui-org/input';
+import { Progress } from '@nextui-org/progress';
 import { Snippet } from '@nextui-org/snippet';
-import { Spinner } from '@nextui-org/spinner';
 import {
   Table,
   TableBody,
@@ -171,7 +171,21 @@ export default function Home() {
         ></Input>
       </div>
 
-      <Table aria-label="" isStriped isHeaderSticky>
+      <Table
+        aria-label=""
+        isStriped
+        isHeaderSticky
+        topContent={
+          <Button
+            isIconOnly
+            className="self-end bg-transparent"
+            onClick={sendQueries}
+          >
+            <RefreshIcon />
+          </Button>
+        }
+        topContentPlacement="outside"
+      >
         <TableHeader columns={columns}>
           {(column) => (
             <TableColumn key={column.key} align="center">
@@ -179,11 +193,14 @@ export default function Home() {
             </TableColumn>
           )}
         </TableHeader>
+
         <TableBody
           items={zekiler}
           emptyContent={'No address found'}
           isLoading={isLoading}
-          loadingContent={<Spinner label="Loading..." color="secondary" />}
+          loadingContent={
+            <Progress size="sm" isIndeterminate className="w-1/6" />
+          }
         >
           {(item) => (
             <TableRow key={item.staker}>
