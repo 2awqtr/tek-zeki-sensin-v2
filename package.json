@@ -28,7 +28,7 @@
 		"@types/react-dom": "18.2.7",
 		"autoprefixer": "10.4.19",
 		"axios": "^1.6.8",
-		"clsx": "^2.0.0",
+		"clsx": "^2.1.1",
 		"eslint": "8.48.0",
 		"eslint-config-next": "14.2.1",
 		"ethereum-unit-converter": "^0.0.17",

@@ -1,6 +1,7 @@
 'use client';
-import { RefreshIcon, SearchIcon } from '@/components/icons';
+import { SearchIcon } from '@/components/icons';
 import RuesModal from '@/components/ruesModal';
+import StakeTabs from '@/components/tabs';
 import {
   baseUrl,
   myStakesQuery,
@@ -9,36 +10,11 @@ import {
 } from '@/config/site';
 import { Button } from '@nextui-org/button';
 import { Input } from '@nextui-org/input';
-import { Progress } from '@nextui-org/progress';
 import { useDisclosure } from '@nextui-org/react';
-import { Snippet } from '@nextui-org/snippet';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableColumn,
-  TableHeader,
-  TableRow,
-} from '@nextui-org/table';
 import axios from 'axios';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Web3 } from 'web3';
 import { isAddress } from 'web3-validator';
-
-const columns = [
-  {
-    key: 'staker',
-    label: 'Wallet Address',
-  },
-  {
-    key: 'youStaked',
-    label: 'Your Stake',
-  },
-  {
-    key: 'receivedStake',
-    label: 'Received Stake',
-  },
-];
 
 const myStakes = new Map();
 const receivedStakes = new Map();
@@ -46,7 +22,8 @@ const receivedStakes = new Map();
 export default function Home() {
   const [wallet, setWallet] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [zekiler, setZekiler] = useState([]);
+  const [unreturnedStakes, setUnreturnedStakes] = useState([]);
+  const [pendingStakes, setPendingStakes] = useState([]);
   const [isInvalid, setIsInvalid] = useState(false);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
@@ -64,7 +41,8 @@ export default function Home() {
 
     myStakes.clear();
     receivedStakes.clear();
-    setZekiler([]);
+    setPendingStakes([]);
+    setUnreturnedStakes([]);
     setIsLoading(true);
 
     try {
@@ -108,23 +86,17 @@ export default function Home() {
           });
         });
 
-      const temp = [];
+      const unreturned = [];
 
       for (let [staker, amount] of myStakes.entries()) {
         if (amount == 0) continue;
 
         const receivedStakedAmount = receivedStakes.get(staker);
-        if (receivedStakedAmount === undefined) {
-          temp.push({
-            staker: staker,
-            youStaked: amount,
-            receivedStake: receivedStakedAmount || 0,
-          });
-          continue;
-        }
-
-        if (amount > receivedStakedAmount) {
-          temp.push({
+        if (
+          receivedStakedAmount === undefined ||
+          amount > receivedStakedAmount
+        ) {
+          unreturned.push({
             staker: staker,
             youStaked: amount,
             receivedStake: receivedStakedAmount || 0,
@@ -132,7 +104,22 @@ export default function Home() {
         }
       }
 
-      setZekiler(temp);
+      const pending = [];
+      for (let [staker, amount] of receivedStakes.entries()) {
+        if (amount == 0) continue;
+
+        const myStakedAmount = myStakes.get(staker);
+        if (myStakedAmount === undefined || myStakedAmount < amount) {
+          pending.push({
+            staker: staker,
+            youStaked: myStakedAmount || 0,
+            receivedStake: amount,
+          });
+        }
+      }
+
+      setUnreturnedStakes(unreturned);
+      setPendingStakes(pending);
     } catch (error) {
       console.log(error);
     } finally {
@@ -142,29 +129,6 @@ export default function Home() {
       setIsLoading(false);
     }
   };
-
-  const renderCell = useCallback((user, columnKey) => {
-    const cellValue = user[columnKey];
-    switch (columnKey) {
-      case 'receivedStake':
-      case 'youStaked':
-        return (
-          <div className="text-[#7071E8] font-mono">{cellValue} $MAND</div>
-        );
-      case 'staker':
-        return (
-          <Snippet
-            className="bg-transparent text-sm text-[#7071E8]"
-            symbol=""
-            size="sm"
-          >
-            {cellValue}
-          </Snippet>
-        );
-      default:
-        return cellValue;
-    }
-  }, []);
 
   useEffect(() => {
     onOpen();
@@ -198,46 +162,12 @@ export default function Home() {
         ></Input>
       </div>
 
-      <Table
-        aria-label=""
-        isStriped
-        isHeaderSticky
-        topContent={
-          <Button
-            isIconOnly
-            className="self-end bg-transparent"
-            onClick={sendQueries}
-          >
-            <RefreshIcon />
-          </Button>
-        }
-        topContentPlacement="outside"
-      >
-        <TableHeader columns={columns}>
-          {(column) => (
-            <TableColumn key={column.key} align="center">
-              {column.label}
-            </TableColumn>
-          )}
-        </TableHeader>
-
-        <TableBody
-          items={zekiler}
-          emptyContent={'No address found'}
-          isLoading={isLoading}
-          loadingContent={
-            <Progress size="sm" isIndeterminate className="w-1/6" />
-          }
-        >
-          {(item) => (
-            <TableRow key={item.staker}>
-              {(columnKey) => (
-                <TableCell>{renderCell(item, columnKey)}</TableCell>
-              )}
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
+      <StakeTabs
+        pendingStakes={pendingStakes}
+        unreturnedStakes={unreturnedStakes}
+        isLoading={isLoading}
+        sendQueries={sendQueries}
+      />
     </div>
   );
 }
