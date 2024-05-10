@@ -45,6 +45,8 @@ export default function RootLayout({
             </main>
 
             <footer className="w-full flex flex-col items-center justify-center py-3">
+         
+
               <p className="font-semibold font-sans">Feel free to support me</p>
               <Snippet
                 className="bg-transparent text-sm"
@@ -53,7 +55,7 @@ export default function RootLayout({
               >
                 {zozak}
               </Snippet>
-              <div className="flex gap-2">
+              <div className="flex">
                 <Button
                   as={Link}
                   isExternal
@@ -73,8 +75,9 @@ export default function RootLayout({
                   <GithubIcon />
                 </Button>
               </div>
-              {/* <span className="text-default-600">Powered by</span>
-                <p className="text-primary">Zozak</p> */}
+              <p className="font-light font-sans">
+                If you have encountered any issue please open issue on GitHub
+              </p>
             </footer>
           </div>
         </Providers>

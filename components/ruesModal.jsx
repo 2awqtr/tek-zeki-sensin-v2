@@ -15,15 +15,13 @@ import {
 export default function RuesModal({ isOpen, onOpenChange }) {
   return (
     <>
-      <Modal
-        isOpen={isOpen}
-        onOpenChange={onOpenChange}
-        backdrop="blur"
-        isDismissable={false}
-      >
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange} backdrop="blur">
         <ModalContent>
           {(onClose) => (
             <>
+              <video width="auto" height="auto" autoPlay loop muted>
+                <source src="kontravolta.mp4" type="video/mp4" />
+              </video>
               <ModalHeader className="flex w-full h-full gap-2 items-center justify-center text-danger">
                 <ExclamationTriangleIcon className="w-5 h-5" />
                 Uyarı
