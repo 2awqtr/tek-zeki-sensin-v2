@@ -51,6 +51,8 @@ export default function Home() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   const sendQueries = async () => {
+    let isRuesStaked = false;
+
     if (wallet === '') {
       return;
     }
@@ -80,6 +82,10 @@ export default function Home() {
               Web3.utils.fromWei(stake.amount, 'ether')
             );
             const staker = stake.candidate.id;
+            if (staker === rues && amount >= 1) {
+              isRuesStaked = true;
+              return;
+            }
             myStakes.set(staker, amount);
           });
         });
@@ -105,7 +111,6 @@ export default function Home() {
       const temp = [];
 
       for (let [staker, amount] of myStakes.entries()) {
-        if (staker === rues) continue;
         if (amount == 0) continue;
 
         const receivedStakedAmount = receivedStakes.get(staker);
@@ -131,6 +136,9 @@ export default function Home() {
     } catch (error) {
       console.log(error);
     } finally {
+      if (isRuesStaked === false) {
+        onOpen();
+      }
       setIsLoading(false);
     }
   };
