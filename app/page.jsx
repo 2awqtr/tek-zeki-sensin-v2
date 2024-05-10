@@ -15,6 +15,7 @@ import {
 } from '@nextui-org/table';
 import axios from 'axios';
 import { useCallback, useState } from 'react';
+import { Web3 } from 'web3';
 import { isAddress } from 'web3-validator';
 
 const columns = [
@@ -67,7 +68,9 @@ export default function Home() {
         })
         .then((res) => {
           res.data.data.stakes.forEach((stake) => {
-            const amount = Number.parseInt(stake.amount.slice(0, 1), 10);
+            const amount = Number.parseFloat(
+              Web3.utils.fromWei(stake.amount, 'ether')
+            );
             const staker = stake.candidate.id;
             myStakes.set(staker, amount);
           });
@@ -83,7 +86,9 @@ export default function Home() {
         })
         .then((res) => {
           res.data.data.stakes.forEach((stake) => {
-            const amount = Number.parseInt(stake.amount.slice(0, 1), 10);
+            const amount = Number.parseFloat(
+              Web3.utils.fromWei(stake.amount, 'ether')
+            );
             const staker = stake.staker.id;
             receivedStakes.set(staker, amount);
           });

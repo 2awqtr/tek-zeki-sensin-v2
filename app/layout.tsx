@@ -4,7 +4,9 @@ import '@/styles/globals.css';
 import { Link } from '@nextui-org/link';
 import clsx from 'clsx';
 import { Metadata, Viewport } from 'next';
+
 import { Providers } from './providers';
+
 export const metadata: Metadata = {
   title: {
     default: siteConfig.name,
@@ -27,6 +29,7 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+
   return (
     <html lang="en" suppressHydrationWarning>
       <head />
