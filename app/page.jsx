@@ -1,9 +1,16 @@
 'use client';
 import { RefreshIcon, SearchIcon } from '@/components/icons';
-import { baseUrl, myStakesQuery, receivedStakesQuery } from '@/config/site';
+import RuesModal from '@/components/ruesModal';
+import {
+  baseUrl,
+  myStakesQuery,
+  receivedStakesQuery,
+  rues,
+} from '@/config/site';
 import { Button } from '@nextui-org/button';
 import { Input } from '@nextui-org/input';
 import { Progress } from '@nextui-org/progress';
+import { useDisclosure } from '@nextui-org/react';
 import { Snippet } from '@nextui-org/snippet';
 import {
   Table,
@@ -14,7 +21,7 @@ import {
   TableRow,
 } from '@nextui-org/table';
 import axios from 'axios';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Web3 } from 'web3';
 import { isAddress } from 'web3-validator';
 
@@ -41,6 +48,7 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(false);
   const [zekiler, setZekiler] = useState([]);
   const [isInvalid, setIsInvalid] = useState(false);
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   const sendQueries = async () => {
     if (wallet === '') {
@@ -97,6 +105,7 @@ export default function Home() {
       const temp = [];
 
       for (let [staker, amount] of myStakes.entries()) {
+        if (staker === rues) continue;
         if (amount == 0) continue;
 
         const receivedStakedAmount = receivedStakes.get(staker);
@@ -149,8 +158,13 @@ export default function Home() {
     }
   }, []);
 
+  useEffect(() => {
+    onOpen();
+  }, []);
+
   return (
     <div className="w-full flex flex-col justify-center items-start gap-10">
+      <RuesModal isOpen={isOpen} onOpen={onOpen} onOpenChange={onOpenChange} />
       <div className="flex w-full items-center justify-center gap-2">
         <Input
           isInvalid={isInvalid}
