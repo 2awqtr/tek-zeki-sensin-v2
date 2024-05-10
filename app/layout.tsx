@@ -1,10 +1,10 @@
+import { GithubIcon, TwitterIcon } from '@/components/icons';
 import { fontSans } from '@/config/fonts';
-import { siteConfig } from '@/config/site';
+import { siteConfig, zozak } from '@/config/site';
 import '@/styles/globals.css';
-import { Link } from '@nextui-org/link';
+import { Button, Link, Snippet } from '@nextui-org/react';
 import clsx from 'clsx';
 import { Metadata, Viewport } from 'next';
-
 import { Providers } from './providers';
 
 export const metadata: Metadata = {
@@ -29,7 +29,6 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-
   return (
     <html lang="en" suppressHydrationWarning>
       <head />
@@ -45,15 +44,37 @@ export default function RootLayout({
               {children}
             </main>
 
-            <footer className="w-full flex items-center justify-center py-3">
-              <Link
-                className="flex items-center gap-1 text-current"
-                href={undefined}
-                title="Zozak"
+            <footer className="w-full flex flex-col items-center justify-center py-3">
+              <p className="font-semibold font-sans">Feel free to support me</p>
+              <Snippet
+                className="bg-transparent text-sm"
+                symbol=""
+                color="primary"
               >
-                <span className="text-default-600">Powered by</span>
-                <p className="text-primary">Zozak</p>
-              </Link>
+                {zozak}
+              </Snippet>
+              <div className="flex gap-2">
+                <Button
+                  as={Link}
+                  isExternal
+                  href="https://twitter.com/Zozak42/status/1788662647019237666"
+                  className="bg-transparent"
+                >
+                  <span className="font-bold">Like</span>
+                  <TwitterIcon />
+                </Button>
+                <Button
+                  as={Link}
+                  isExternal
+                  href="https://github.com/AkifhanIlgaz/tek-zeki-sensin"
+                  className="bg-transparent"
+                >
+                  <span className="font-bold">Star</span>
+                  <GithubIcon />
+                </Button>
+              </div>
+              {/* <span className="text-default-600">Powered by</span>
+                <p className="text-primary">Zozak</p> */}
             </footer>
           </div>
         </Providers>
