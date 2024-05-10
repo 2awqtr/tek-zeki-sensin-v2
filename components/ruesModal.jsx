@@ -12,7 +12,7 @@ import {
   Snippet,
 } from '@nextui-org/react';
 
-export default function RuesModal({ isOpen, onOpen, onOpenChange }) {
+export default function RuesModal({ isOpen, onOpenChange }) {
   return (
     <>
       <Modal
@@ -30,7 +30,7 @@ export default function RuesModal({ isOpen, onOpen, onOpenChange }) {
               </ModalHeader>
               <ModalBody className="text-center">
                 <p>
-                  Lütfen iyi bir RC üyesi olup Ruesandora'ya stakelerimizi
+                  Lütfen iyi bir RC üyesi olup Ruesandora&apos;ya stakelerimizi
                   yapalım.
                 </p>
                 <Snippet
