@@ -11,7 +11,6 @@ import {
   TableHeader,
   TableRow,
 } from '@nextui-org/table';
-import clsx from 'clsx';
 import { useCallback } from 'react';
 
 const unreturnedColumns = [
@@ -28,42 +27,21 @@ const unreturnedColumns = [
     label: 'Received Stake',
   },
 ];
-const pendingColumns = [
-  {
-    key: 'staker',
-    label: 'Wallet Address',
-  },
-  {
-    key: 'receivedStake',
-    label: 'Received Stake',
-  },
-  {
-    key: 'youStaked',
-    label: 'Your Stake',
-  },
-];
 
-export default function StakeTable({ tab, sendQueries, isLoading, items }) {
+export default function StakeTable({ sendQueries, isLoading, items }) {
   const renderCell = useCallback((user, columnKey) => {
     const cellValue = user[columnKey];
     switch (columnKey) {
       case 'receivedStake':
       case 'youStaked':
         return (
-          <div
-            className={clsx('text-[#7071E8] font-mono', {
-              'text-warning': tab === 'pending',
-            })}
-          >
-            {cellValue} $MAND
-          </div>
+          <div className="text-[#7071E8] font-mono">{cellValue} $MAND</div>
         );
       case 'staker':
         return (
           <Snippet
             className="bg-transparent text-sm text-[#7071E8]"
             symbol=""
-            color={tab === 'pending' && 'warning'}
             size="sm"
           >
             {cellValue}
@@ -90,9 +68,7 @@ export default function StakeTable({ tab, sendQueries, isLoading, items }) {
       }
       topContentPlacement="outside"
     >
-      <TableHeader
-        columns={tab === 'unreturned' ? unreturnedColumns : pendingColumns}
-      >
+      <TableHeader columns={unreturnedColumns}>
         {(column) => (
           <TableColumn key={column.key} align="center">
             {column.label}

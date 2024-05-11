@@ -1,4 +1,4 @@
-import { GithubIcon, TwitterIcon } from '@/components/icons';
+import { GithubIcon } from '@/components/icons';
 import { fontSans } from '@/config/fonts';
 import { siteConfig, zozak } from '@/config/site';
 import '@/styles/globals.css';
@@ -45,8 +45,6 @@ export default function RootLayout({
             </main>
 
             <footer className="w-full flex flex-col items-center justify-center py-3">
-         
-
               <p className="font-semibold font-sans">Feel free to support me</p>
               <Snippet
                 className="bg-transparent text-sm"
@@ -59,19 +57,9 @@ export default function RootLayout({
                 <Button
                   as={Link}
                   isExternal
-                  href="https://twitter.com/Zozak42/status/1788662647019237666"
-                  className="bg-transparent"
-                >
-                  <span className="font-bold">Like</span>
-                  <TwitterIcon />
-                </Button>
-                <Button
-                  as={Link}
-                  isExternal
                   href="https://github.com/AkifhanIlgaz/tek-zeki-sensin"
                   className="bg-transparent"
                 >
-                  <span className="font-bold">Star</span>
                   <GithubIcon />
                 </Button>
               </div>
