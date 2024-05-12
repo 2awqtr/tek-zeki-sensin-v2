@@ -3,10 +3,11 @@ import { fontSans } from '@/config/fonts';
 import { siteConfig, zozak } from '@/config/site';
 import '@/styles/globals.css';
 import { Button, Link, Snippet } from '@nextui-org/react';
+import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 import clsx from 'clsx';
 import { Metadata, Viewport } from 'next';
 import { Providers } from './providers';
-
 export const metadata: Metadata = {
   title: {
     default: siteConfig.name,
@@ -39,6 +40,8 @@ export default function RootLayout({
         )}
       >
         <Providers themeProps={{ attribute: 'class', defaultTheme: 'dark' }}>
+          <Analytics />
+          <SpeedInsights />
           <div className="relative flex flex-col h-screen">
             <main className="container mx-auto max-w-7xl pt-16 px-6 flex-grow">
               {children}
