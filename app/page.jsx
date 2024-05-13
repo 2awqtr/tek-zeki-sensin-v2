@@ -144,7 +144,7 @@ export default function Home() {
       <div className="w-full flex items-center justify-center text-amber-300">
         <p className="text-sans text-sm">
           <span className="font-bold text-amber-600">Attention:</span> This
-          table only shows the adresses that does not mutually stake with you.
+          table only shows the adresses that does not mutually stake with you..
         </p>
       </div>
 
