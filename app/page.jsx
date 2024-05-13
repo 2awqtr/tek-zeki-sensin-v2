@@ -93,20 +93,6 @@ export default function Home() {
         }
       }
 
-      // const pending = [];
-      // for (let [staker, amount] of receivedStakes.entries()) {
-      //   if (amount == 0) continue;
-
-      //   const myStakedAmount = myStakes.get(staker);
-      //   if (myStakedAmount === undefined || myStakedAmount < amount) {
-      //     pending.push({
-      //       staker: staker,
-      //       youStaked: myStakedAmount || 0,
-      //       receivedStake: amount,
-      //     });
-      //   }
-      // }
-
       setUnreturnedStakes(unreturned);
     } catch (error) {
       console.log(error);
