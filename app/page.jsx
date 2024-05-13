@@ -220,33 +220,12 @@ export default function Home() {
             setWallet1(address);
           }}
         />
-        <Input
-          isInvalid={isInvalid2}
-          placeholder="Enter wallet address 2"
-          errorMessage="Please enter valid address"
-          endContent={
-            <Button
-              className="bg-transparent hover:bg-transparent"
-              isIconOnly
-              onClick={handleSearch2}
-            >
-              <SearchIcon />
-            </Button>
-          }
-          onChange={(e) => {
-            const address = e.target.value.trim();
-            if (address === '') {
-              setIsInvalid2(false);
-              return;
-            }
-            setWallet2(address);
-          }}
-        />
+        
       </div>
       <div className="w-full flex items-center justify-center text-amber-300">
         <p className="text-sans text-sm">
           <span className="font-bold text-amber-600">Attention:</span> This
-          table only shows the addresses that do not mutually stake with you.
+          table only shows the addresses that do not mutually stake with you..
         </p>
       </div>
 
