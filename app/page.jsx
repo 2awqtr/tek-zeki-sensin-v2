@@ -5,7 +5,6 @@ import {
   baseUrl,
   myStakesQuery,
   receivedStakesQuery,
-  rues,
 } from '@/config/site';
 import { Button } from '@nextui-org/button';
 import { Input } from '@nextui-org/input';
@@ -53,9 +52,7 @@ export default function Home() {
               Web3.utils.fromWei(stake.amount, 'ether')
             );
             const staker = stake.candidate.id;
-            if (staker === rues && amount >= 1) {
-              return;
-            }
+            
             myStakes.set(staker, amount);
           });
         });
