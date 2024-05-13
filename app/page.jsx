@@ -85,7 +85,7 @@ export default function Home() {
 
       for (let [staker, amount] of myStakes.entries()) {
         const receivedStakedAmount = receivedStakes.get(staker);
-        [unreturned.push({
+        unreturned.push({
             staker: staker,
             youStaked: amount,
             receivedStake: receivedStakedAmount || 0,
