@@ -85,8 +85,8 @@ export default function Home() {
 
       for (let [staker, amount] of myStakes.entries()) {
         const receivedStakedAmount = receivedStakes.get(staker);
-        if (
-          receivedStakedAmount === undefined)
+        if (amount == receivedStakedAmount)
+        {}else
         {[unreturned.push({
             staker: staker,
             youStaked: amount,
