@@ -192,7 +192,7 @@ export default function Home() {
   };
 
   const handleSearch2 = () => {
-    sendQueries2(wallet2, setIsLoading2, setUnreturnedStakes2, setIsInvalid2);
+    sendQueries2(wallet1, setIsLoading2, setUnreturnedStakes2, setIsInvalid2);
   };
 
   return (
