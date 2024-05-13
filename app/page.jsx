@@ -78,7 +78,7 @@ export default function Home() {
       const unreturned = [];
 
       for (let [staker, amount] of myStakes.entries()) {
-        if (amount == 0) continue;
+       
 
         const receivedStakedAmount = receivedStakes.get(staker);
         if(amount !== receivedStakedAmount)
