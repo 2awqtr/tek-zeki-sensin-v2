@@ -81,15 +81,13 @@ export default function Home() {
         if (amount == 0) continue;
 
         const receivedStakedAmount = receivedStakes.get(staker);
-        if (
-          receivedStakedAmount === undefined
-        ) {
+        
           unreturned.push({
             staker: staker,
             youStaked: amount,
             receivedStake: receivedStakedAmount || 0,
           });
-        }
+        
       }
 
       // const pending = [];
