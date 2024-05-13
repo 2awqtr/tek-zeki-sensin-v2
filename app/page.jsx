@@ -81,12 +81,12 @@ export default function Home() {
       const unreturned = [];
 
       for (let [staker, amount] of myStakes.entries()) {
-        if (amount == 0) continue;
+        if (amount === 0) continue;
 
         const receivedStakedAmount = receivedStakes.get(staker);
         if (
-          receivedStakedAmount === undefined ||
-          amount < receivedStakedAmount
+          (receivedStakedAmount === undefined || amount > receivedStakedAmount) &&
+          (receivedStakes.get(staker) === undefined || receivedStakes.get(staker) > amount)
         ) {
           unreturned.push({
             staker: staker,
@@ -95,114 +95,6 @@ export default function Home() {
           });
         }
       }
-
-      // const pending = [];
-      // for (let [staker, amount] of receivedStakes.entries()) {
-      //   if (amount == 0) continue;
-
-      //   const myStakedAmount = myStakes.get(staker);
-      //   if (myStakedAmount === undefined || myStakedAmount < amount) {
-      //     pending.push({
-      //       staker: staker,
-      //       youStaked: myStakedAmount || 0,
-      //       receivedStake: amount,
-      //     });
-      //   }
-      // }
-
-      setUnreturnedStakes(unreturned);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-  const sendQueries = async () => {
-    if (wallet === '') {
-      return;
-    }
-
-    if (!isAddress(wallet)) {
-      setIsInvalid(true);
-      return;
-    }
-
-    myStakes.clear();
-    receivedStakes.clear();
-    setUnreturnedStakes([]);
-    setIsLoading(true);
-
-    try {
-      await axios
-        .post(baseUrl, {
-          operationName: 'GetStakesSent',
-          query: myStakesQuery,
-          variables: {
-            address: wallet,
-          },
-        })
-        .then((res) => {
-          res.data.data.stakes.forEach((stake) => {
-            const amount = Number.parseFloat(
-              Web3.utils.fromWei(stake.amount, 'ether')
-            );
-            const staker = stake.candidate.id;
-            if (staker === rues && amount >= 1) {
-              return;
-            }
-            myStakes.set(staker, amount);
-          });
-        });
-
-      await axios
-        .post(baseUrl, {
-          operationName: 'GetStakesSent',
-          query: receivedStakesQuery,
-          variables: {
-            address: wallet,
-          },
-        })
-        .then((res) => {
-          res.data.data.stakes.forEach((stake) => {
-            const amount = Number.parseFloat(
-              Web3.utils.fromWei(stake.amount, 'ether')
-            );
-            const staker = stake.staker.id;
-            receivedStakes.set(staker, amount);
-          });
-        });
-
-      const unreturned = [];
-
-      for (let [staker, amount] of myStakes.entries()) {
-        if (amount == 0) continue;
-
-        const receivedStakedAmount = receivedStakes.get(staker);
-        if (
-          receivedStakedAmount === undefined ||
-          receivedStakedAmount < amount
-        ) {
-          unreturned.push({
-            staker: staker,
-            youStaked: amount,
-            receivedStake: receivedStakedAmount || 0,
-          });
-        }
-      }
-
-      // const pending = [];
-      // for (let [staker, amount] of receivedStakes.entries()) {
-      //   if (amount == 0) continue;
-
-      //   const myStakedAmount = myStakes.get(staker);
-      //   if (myStakedAmount === undefined || myStakedAmount < amount) {
-      //     pending.push({
-      //       staker: staker,
-      //       youStaked: myStakedAmount || 0,
-      //       receivedStake: amount,
-      //     });
-      //   }
-      // }
 
       setUnreturnedStakes(unreturned);
     } catch (error) {
@@ -253,3 +145,4 @@ export default function Home() {
     </div>
   );
 }
+
