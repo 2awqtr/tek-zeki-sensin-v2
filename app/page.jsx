@@ -199,7 +199,7 @@ const sendQuerieseftay = async (wallet, setIsLoading, setUnreturnedStakes, setIs
   };
 
   const handleSearch2 = () => {
-    sendQueries(wallet2, setIsLoading2, setUnreturnedStakes2, setIsInvalid2);
+    sendQuerieseftay(wallet2, setIsLoading2, setUnreturnedStakes2, setIsInvalid2);
   };
 
   return (
