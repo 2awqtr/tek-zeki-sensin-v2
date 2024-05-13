@@ -5,6 +5,7 @@ import {
   baseUrl,
   myStakesQuery,
   receivedStakesQuery,
+  rues,
 } from '@/config/site';
 import { Button } from '@nextui-org/button';
 import { Input } from '@nextui-org/input';
@@ -52,7 +53,9 @@ export default function Home() {
               Web3.utils.fromWei(stake.amount, 'ether')
             );
             const staker = stake.candidate.id;
-            
+            if (staker === rues && amount >= 1) {
+              return;
+            }
             myStakes.set(staker, amount);
           });
         });
@@ -82,8 +85,9 @@ export default function Home() {
 
         const receivedStakedAmount = receivedStakes.get(staker);
         if (
-          receivedStakedAmount === undefined ||) 
-        {
+          receivedStakedAmount === undefined ||
+          amount > receivedStakedAmount
+        ) {
           unreturned.push({
             staker: staker,
             youStaked: amount,
@@ -91,6 +95,20 @@ export default function Home() {
           });
         }
       }
+
+      // const pending = [];
+      // for (let [staker, amount] of receivedStakes.entries()) {
+      //   if (amount == 0) continue;
+
+      //   const myStakedAmount = myStakes.get(staker);
+      //   if (myStakedAmount === undefined || myStakedAmount < amount) {
+      //     pending.push({
+      //       staker: staker,
+      //       youStaked: myStakedAmount || 0,
+      //       receivedStake: amount,
+      //     });
+      //   }
+      // }
 
       setUnreturnedStakes(unreturned);
     } catch (error) {
