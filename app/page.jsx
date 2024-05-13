@@ -107,9 +107,6 @@ export default function Home() {
     sendQueries(wallet1, setIsLoading1, setUnreturnedStakes1, setIsInvalid1);
   };
 
-  const handleSearch2 = () => {
-    sendQuerieseftay(wallet2, setIsLoading2, setUnreturnedStakes2, setIsInvalid2);
-  };
 
   return (
     <div className="w-full flex flex-col justify-center items-start gap-10">
@@ -171,11 +168,7 @@ export default function Home() {
         items={unreturnedStakes1}
         sendQueries={handleSearch1}
       />
-      <StakeTable
-        isLoading={isLoading2}
-        items={unreturnedStakes2}
-        sendQueries={handleSearch2}
-      />
+     
     </div>
   );
 }
