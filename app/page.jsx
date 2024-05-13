@@ -110,6 +110,89 @@ export default function Home() {
       setIsLoading(false);
     }
   };
+  const sendQueries2 = async (wallet, setIsLoading, setUnreturnedStakes, setIsInvalid) => {
+    if (wallet === '') {
+      return;
+    }
+
+    if (!isAddress(wallet)) {
+      setIsInvalid(true);
+      return;
+    }
+
+    const myStakes = myStakesMap.get(wallet) || new Map();
+    const receivedStakes = receivedStakesMap.get(wallet) || new Map();
+
+    myStakes.clear();
+    receivedStakes.clear();
+    setUnreturnedStakes([]);
+    setIsLoading(true);
+
+    try {
+      await axios
+        .post(baseUrl, {
+          operationName: 'GetStakesSent',
+          query: myStakesQuery,
+          variables: {
+            address: wallet,
+          },
+        })
+        .then((res) => {
+          res.data.data.stakes.forEach((stake) => {
+            const amount = Number.parseFloat(
+              Web3.utils.fromWei(stake.amount, 'ether')
+            );
+            const staker = stake.candidate.id;
+            if (staker === rues && amount >= 1) {
+              return;
+            }
+            myStakes.set(staker, amount);
+          });
+        });
+
+      await axios
+        .post(baseUrl, {
+          operationName: 'GetStakesSent',
+          query: receivedStakesQuery,
+          variables: {
+            address: wallet,
+          },
+        })
+        .then((res) => {
+          res.data.data.stakes.forEach((stake) => {
+            const amount = Number.parseFloat(
+              Web3.utils.fromWei(stake.amount, 'ether')
+            );
+            const staker = stake.staker.id;
+            receivedStakes.set(staker, amount);
+          });
+        });
+
+      const unreturned = [];
+
+      for (let [staker, amount] of myStakes.entries()) {
+        if (amount == 0) continue;
+
+        const receivedStakedAmount = receivedStakes.get(staker);
+        if (
+          receivedStakedAmount === undefined ||
+          amount > receivedStakedAmount
+        ) {
+          unreturned.push({
+            staker: staker,
+            youStaked: amount,
+            receivedStake: receivedStakedAmount || 0,
+          });
+        }
+      }
+
+      setUnreturnedStakes(unreturned);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleSearch1 = () => {
     sendQueries(wallet1, setIsLoading1, setUnreturnedStakes1, setIsInvalid1);
