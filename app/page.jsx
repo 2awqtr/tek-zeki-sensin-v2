@@ -82,8 +82,7 @@ export default function Home() {
 
         const receivedStakedAmount = receivedStakes.get(staker);
         if (
-          receivedStakedAmount === undefined ||
-          amount > receivedStakedAmount
+          receivedStakedAmount === undefined
         ) {
           unreturned.push({
             staker: staker,
