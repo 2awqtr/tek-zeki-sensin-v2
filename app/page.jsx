@@ -77,19 +77,22 @@ export default function Home() {
 
       const unreturned = [];
 
-      for (let [staker, amount] of myStakes.entries()) {
-       
+     for (let [staker, amount] of receivedStakes.entries()) {
+  if (amount == 0) continue;
 
-        const receivedStakedAmount = receivedStakes.get(staker);
-        if(amount !== receivedStakedAmount)
-        {
-          unreturned.push({
-            staker: staker,
-            youStaked: amount,
-            receivedStake: receivedStakedAmount || 0,
-          });
-        }
-      }
+  const myStakedAmount = myStakes.get(staker);
+  if (
+    myStakedAmount === undefined ||
+    amount > myStakedAmount
+  ) {
+    unreturned.push({
+      staker: staker,
+      youStaked: myStakedAmount || 0,
+      receivedStake: amount,
+    });
+  }
+}
+
 
       // const pending = [];
       // for (let [staker, amount] of receivedStakes.entries()) {
