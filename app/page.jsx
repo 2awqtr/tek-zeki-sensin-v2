@@ -85,13 +85,11 @@ export default function Home() {
 
       for (let [staker, amount] of myStakes.entries()) {
         const receivedStakedAmount = receivedStakes.get(staker);
-        if (amount == receivedStakedAmount)
-        {}else
-        {[unreturned.push({
+        [unreturned.push({
             staker: staker,
             youStaked: amount,
             receivedStake: receivedStakedAmount || 0,
-          });}
+          });
         
       }
 
