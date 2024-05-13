@@ -132,27 +132,6 @@ const sendQuerieseftay = async (wallet, setIsLoading, setUnreturnedStakes, setIs
       await axios
         .post(baseUrl, {
           operationName: 'GetStakesSent',
-          query: myStakesQuery,
-          variables: {
-            address: wallet,
-          },
-        })
-        .then((res) => {
-          res.data.data.stakes.forEach((stake) => {
-            const amount = Number.parseFloat(
-              Web3.utils.fromWei(stake.amount, 'ether')
-            );
-            const staker = stake.candidate.id;
-            if (staker === rues && amount >= 1) {
-              return;
-            }
-            myStakes.set(staker, amount);
-          });
-        });
-
-      await axios
-        .post(baseUrl, {
-          operationName: 'GetStakesSent',
           query: receivedStakesQuery,
           variables: {
             address: wallet,
@@ -164,24 +143,45 @@ const sendQuerieseftay = async (wallet, setIsLoading, setUnreturnedStakes, setIs
               Web3.utils.fromWei(stake.amount, 'ether')
             );
             const staker = stake.staker.id;
+            if (staker === rues && amount >= 1) {
+              return;
+            }
+            myStakes.set(staker, amount);
+          });
+        });
+
+      await axios
+        .post(baseUrl, {
+          operationName: 'GetStakesSent',
+          query: myStakesQuery,
+          variables: {
+            address: wallet,
+          },
+        })
+        .then((res) => {
+          res.data.data.stakes.forEach((stake) => {
+            const amount = Number.parseFloat(
+              Web3.utils.fromWei(stake.amount, 'ether')
+            );
+            const staker = stake.candidate.id;
             receivedStakes.set(staker, amount);
           });
         });
 
       const unreturned = [];
 
-      for (let [staker, amount] of myStakes.entries()) {
+      for (let [staker, amount] of receivedStakes.entries()) {
         if (amount == 0) continue;
 
-        const receivedStakedAmount = receivedStakes.get(staker);
+        const myStakedAmount = myStakes.get(staker);
         if (
-          receivedStakedAmount === undefined ||
-          amount > receivedStakedAmount
+          myStakedAmount === undefined ||
+          amount > myStakedAmount
         ) {
           unreturned.push({
             staker: staker,
-            youStaked: amount,
-            receivedStake: receivedStakedAmount || 0,
+            youStaked: myStakedAmount || 0,
+            receivedStake: amount,
           });
         }
       }
@@ -193,7 +193,6 @@ const sendQuerieseftay = async (wallet, setIsLoading, setUnreturnedStakes, setIs
       setIsLoading(false);
     }
   };
-
   const handleSearch1 = () => {
     sendQueries(wallet1, setIsLoading1, setUnreturnedStakes1, setIsInvalid1);
   };
