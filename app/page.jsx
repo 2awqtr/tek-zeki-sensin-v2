@@ -5,6 +5,7 @@ import {
   baseUrl,
   myStakesQuery,
   receivedStakesQuery,
+  rues,
 } from '@/config/site';
 import { Button } from '@nextui-org/button';
 import { Input } from '@nextui-org/input';
@@ -13,16 +14,20 @@ import { useState } from 'react';
 import { Web3 } from 'web3';
 import { isAddress } from 'web3-validator';
 
-const myStakes = new Map();
-const receivedStakes = new Map();
+const myStakesMap = new Map();
+const receivedStakesMap = new Map();
 
 export default function Home() {
-  const [wallet, setWallet] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [unreturnedStakes, setUnreturnedStakes] = useState([]);
-  const [isInvalid, setIsInvalid] = useState(false);
+  const [wallet1, setWallet1] = useState('');
+  const [wallet2, setWallet2] = useState('');
+  const [isLoading1, setIsLoading1] = useState(false);
+  const [isLoading2, setIsLoading2] = useState(false);
+  const [unreturnedStakes1, setUnreturnedStakes1] = useState([]);
+  const [unreturnedStakes2, setUnreturnedStakes2] = useState([]);
+  const [isInvalid1, setIsInvalid1] = useState(false);
+  const [isInvalid2, setIsInvalid2] = useState(false);
 
-  const sendQueries = async () => {
+  const sendQueries = async (wallet, setIsLoading, setUnreturnedStakes, setIsInvalid) => {
     if (wallet === '') {
       return;
     }
@@ -31,6 +36,9 @@ export default function Home() {
       setIsInvalid(true);
       return;
     }
+
+    const myStakes = myStakesMap.get(wallet) || new Map();
+    const receivedStakes = receivedStakesMap.get(wallet) || new Map();
 
     myStakes.clear();
     receivedStakes.clear();
@@ -52,7 +60,9 @@ export default function Home() {
               Web3.utils.fromWei(stake.amount, 'ether')
             );
             const staker = stake.candidate.id;
-            
+            if (staker === rues && amount >= 1) {
+              return;
+            }
             myStakes.set(staker, amount);
           });
         });
@@ -77,36 +87,21 @@ export default function Home() {
 
       const unreturned = [];
 
-     for (let [staker, amount] of receivedStakes.entries()) {
-  if (amount == 0) continue;
+      for (let [staker, amount] of myStakes.entries()) {
+        if (amount == 0) continue;
 
-  const myStakedAmount = myStakes.get(staker);
-  if (
-    myStakedAmount === undefined ||
-    amount > myStakedAmount
-  ) {
-    unreturned.push({
-      staker: staker,
-      youStaked: myStakedAmount || 0,
-      receivedStake: amount,
-    });
-  }
-}
-
-
-      // const pending = [];
-      // for (let [staker, amount] of receivedStakes.entries()) {
-      //   if (amount == 0) continue;
-
-      //   const myStakedAmount = myStakes.get(staker);
-      //   if (myStakedAmount === undefined || myStakedAmount < amount) {
-      //     pending.push({
-      //       staker: staker,
-      //       youStaked: myStakedAmount || 0,
-      //       receivedStake: amount,
-      //     });
-      //   }
-      // }
+        const receivedStakedAmount = receivedStakes.get(staker);
+        if (
+          receivedStakedAmount === undefined ||
+          amount > receivedStakedAmount
+        ) {
+          unreturned.push({
+            staker: staker,
+            youStaked: amount,
+            receivedStake: receivedStakedAmount || 0,
+          });
+        }
+      }
 
       setUnreturnedStakes(unreturned);
     } catch (error) {
@@ -116,18 +111,26 @@ export default function Home() {
     }
   };
 
+  const handleSearch1 = () => {
+    sendQueries(wallet1, setIsLoading1, setUnreturnedStakes1, setIsInvalid1);
+  };
+
+  const handleSearch2 = () => {
+    sendQueries(wallet2, setIsLoading2, setUnreturnedStakes2, setIsInvalid2);
+  };
+
   return (
     <div className="w-full flex flex-col justify-center items-start gap-10">
       <div className="flex w-full items-center justify-center gap-2">
         <Input
-          isInvalid={isInvalid}
-          placeholder="Enter your wallet address"
+          isInvalid={isInvalid1}
+          placeholder="Enter wallet address 1"
           errorMessage="Please enter valid address"
           endContent={
             <Button
               className="bg-transparent hover:bg-transparent"
               isIconOnly
-              onClick={sendQueries}
+              onClick={handleSearch1}
             >
               <SearchIcon />
             </Button>
@@ -135,24 +138,51 @@ export default function Home() {
           onChange={(e) => {
             const address = e.target.value.trim();
             if (address === '') {
-              setIsInvalid(false);
+              setIsInvalid1(false);
               return;
             }
-            setWallet(address);
+            setWallet1(address);
           }}
-        ></Input>
+        />
+        <Input
+          isInvalid={isInvalid2}
+          placeholder="Enter wallet address 2"
+          errorMessage="Please enter valid address"
+          endContent={
+            <Button
+              className="bg-transparent hover:bg-transparent"
+              isIconOnly
+              onClick={handleSearch2}
+            >
+              <SearchIcon />
+            </Button>
+          }
+          onChange={(e) => {
+            const address = e.target.value.trim();
+            if (address === '') {
+              setIsInvalid2(false);
+              return;
+            }
+            setWallet2(address);
+          }}
+        />
       </div>
       <div className="w-full flex items-center justify-center text-amber-300">
         <p className="text-sans text-sm">
           <span className="font-bold text-amber-600">Attention:</span> This
-          table only shows the adresses that does not mutually stake with you..
+          table only shows the addresses that do not mutually stake with you.
         </p>
       </div>
 
       <StakeTable
-        isLoading={isLoading}
-        items={unreturnedStakes}
-        sendQueries={sendQueries}
+        isLoading={isLoading1}
+        items={unreturnedStakes1}
+        sendQueries={handleSearch1}
+      />
+      <StakeTable
+        isLoading={isLoading2}
+        items={unreturnedStakes2}
+        sendQueries={handleSearch2}
       />
     </div>
   );
